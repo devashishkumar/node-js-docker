@@ -1,24 +1,11 @@
-## FROM node:14.15.2
-## WORKDIR /nodeapp
-## COPY . .
-## RUN npm install
-## EXPOSE 8888
-## ENTRYPOINT ["node", "app.js"]
-
-FROM node:14.15.2-alpine
-
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
-
-WORKDIR /home/node/app
-
+FROM node:14
+# Create app directory
+WORKDIR /app
+# Copy package.json and package-lock.json using a wildcard
 COPY package*.json ./
-
-USER node
-
+# Install app dependencies
 RUN npm install
-
-COPY --chown=node:node . .
-
-EXPOSE 8080
-
-CMD [ "node", "app.js" ]
+# Bundle app source
+COPY . ./app
+EXPOSE 4444
+CMD ["npm", "start"]
